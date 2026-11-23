@@ -1,0 +1,24 @@
+name: Validate profile
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify generated README and configuration
+        run: python3 scripts/profile.py check
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests -v
